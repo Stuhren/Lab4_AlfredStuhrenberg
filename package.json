@@ -1,0 +1,27 @@
+{
+  "name": "lab4_alfredstuhrenberg",
+  "version": "1.0.0",
+  "description": "Lab 4 made by Alfred Stührenberg",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Stuhren/Lab4_AlfredStuhrenberg.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Stuhren/Lab4_AlfredStuhrenberg/issues"
+  },
+  "homepage": "https://github.com/Stuhren/Lab4_AlfredStuhrenberg#readme",
+  "dependencies": {
+    "bcrypt": "^5.1.0",
+    "dotenv": "^16.0.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.0"
+  }
+}
