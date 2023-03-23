@@ -16,7 +16,7 @@ function initDb() {
 
 async function addUser(username, name, role, password) {
     if (await usernameExists(username)) {
-        console.log("Username is already taken, please try another one")
+        console.log("Username is already taken, please try with another username.")
     }
     else {
         return new Promise((resolve, reject) => {
@@ -29,6 +29,19 @@ async function addUser(username, name, role, password) {
         });
     }
 }
+
+function getUsers() {
+    return new Promise((resolve, reject) => {
+        db.all("SELECT * FROM users", (err, res) => {
+          if (err) {
+            reject(err);
+          } else {
+            resolve(res);
+          }
+        });
+      });
+    }
+
 
 function usernameExists(usernameToSearchFor) {
     let sql = "SELECT username FROM users"
@@ -50,4 +63,20 @@ function usernameExists(usernameToSearchFor) {
 }
 
 
-module.exports = {addUser}
+function getPasswordForUser(usernameToSearchFor) {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT password FROM users where username = ?";
+        db.get(sql, [usernameToSearchFor], (err, row) => {
+            if (err) {
+                return reject(err);
+            }
+            if (!row) {
+                return reject(new Error("User was not found, please try again!"));
+            }
+            resolve(row.password);
+        });
+    });
+}
+
+
+module.exports = {addUser, getUsers, getPasswordForUser}
