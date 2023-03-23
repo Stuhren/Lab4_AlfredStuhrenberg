@@ -78,5 +78,19 @@ function getPasswordForUser(usernameToSearchFor) {
     });
 }
 
+function getUser(usernameToSearchFor) {
+    return new Promise((resolve, reject) => {
+        const sql = "SELECT * FROM users where username = ?";
+        db.get(sql, [usernameToSearchFor], (err, res) => {
+            if (err) {
+                reject(err);
+            }
+             else {
+                resolve(res);
+            }
+        });
+    });
+}
 
-module.exports = {addUser, getUsers, getPasswordForUser}
+
+module.exports = {addUser, getUsers, getPasswordForUser, getUser}
