@@ -7,7 +7,7 @@ const db = new sqlite3.Database('./userlogin.db', sqlite3.OPEN_READWRITE, (err) 
   console.log('Database created.')
 });
 
-function initDb() {
+function createDb() {
   db.serialize(function () {
     db.run("DROP TABLE IF EXISTS users;");
     db.run("CREATE TABLE IF NOT EXISTS users(username TEXT NOT NULL PRIMARY KEY, name TEXT, role TEXT CHECK(role in('STUDENT1', 'STUDENT2', 'TEACHER','ADMIN')), password TEXT NOT NULL);");
@@ -93,4 +93,4 @@ function getUser(usernameToSearchFor) {
 }
 
 
-module.exports = {addUser, getUsers, getPasswordForUser, getUser}
+module.exports = {addUser, getUsers, getPasswordForUser, getUser, createDb}

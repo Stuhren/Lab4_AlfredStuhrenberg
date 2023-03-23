@@ -12,6 +12,9 @@ app.use(express.urlencoded({extended: false}))
 app.use(express.json())
 app.use(cookieParser())
 
+//Deletes current and creates a new database everytime server is run to not overflow with information.
+db.createDb()
+
 
 var currentKey =""
 
@@ -88,12 +91,34 @@ app.get('/student2', authenticateToken, authorizeRole(["STUDENT2","ADMIN","TEACH
 app.get('/teacher', authenticateToken, authorizeRole(["TEACHER","ADMIN"]), async (req, res) => {
     try {
         const user = await getUserFromToken(req);
-        res.render('teacher.ejs', students)
+        res.render('teacher.ejs')
     } catch (error) {
         console.error(error)
         res.status(500).render('fail.ejs', {error})
     }
 })
+
+app.get('/register', (req, res) => {
+    res.render('register.ejs')
+})
+
+app.post('/register', async (req, res) => {
+//If username or password is empty, it will fail
+if (req.body.password === '' || req.body.username === '') {
+    res.status(400).render('fail.ejs', { message: "Please enter a username AND password" });
+    return;
+  }
+
+  //else
+  try {
+    createUsers(req.body.userId, req.body.name, req.body.role, req.body.password)
+    res.status(200).redirect('/identify')
+  } catch (error) {
+    res.status(400).render('fail.ejs', { message: error })
+    return;
+  }
+})
+
 
 
 function authenticateToken(req, res, next) {
@@ -103,7 +128,7 @@ function authenticateToken(req, res, next) {
       } else if (jwt.verify(currentKey, process.env.ACCESS_TOKEN_SECRET)) {
         next()
       } else {
-        res.redirect("/identify")
+        res.status(401).redirect("/identify")
       }
     } catch (error) {
       res.status(500).send({ error: "Authentication failed" });
