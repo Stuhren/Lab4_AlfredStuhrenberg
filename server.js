@@ -1,7 +1,9 @@
 const express = require("express")
 const app = express()
 const jwt = require('jsonwebtoken')
+const addUsers = require("./database").addUser
 require('dotenv').config()
+const bcrypt = require('bcrypt');
 
 app.set('view-engine', 'ejs')
 app.use(express.urlencoded({extended: false}))
@@ -39,6 +41,19 @@ function authenticateToken(req, res, next) {
 app.get('/granted', authenticateToken, (req, res) => {
     res.render("start.ejs")
 })
+
+async function createUsers(username, name, role, password) {
+    let encryptedPassowrd = await bcrypt.hash(password, 10);
+    await addUsers(username, name, role, encryptedPassowrd)
+}
+
+//Create default users
+
+createUsers('id1','user1', 'STUDENT1', 'password');
+createUsers('id2','user2', 'STUDENT2', 'password2');
+createUsers('id3', 'user3', 'TEACHER', 'password3');
+createUsers('admin', 'admin', 'ADMIN', 'admin');
+
 
 
 app.listen(8000, () => {
