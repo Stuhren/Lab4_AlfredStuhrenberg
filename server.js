@@ -40,7 +40,7 @@ app.post('/identify', async (req, res) => {
                 let userObj = { username: req.body.userId, role: dbUser.role };
                 const token = jwt.sign(userObj, process.env.ACCESS_TOKEN_SECRET)
                 currentKey = token
-                res.cookie("jwt", token, { httpOnly: true }).status(200).redirect(`/granted`);
+                res.cookie("jwt", token, { httpOnly: true }).status(200).redirect(`/users/${dbUser.username}`);
             } else {
                 throw new Error('Incorrect password')
             }
@@ -90,7 +90,6 @@ app.get('/student2', authenticateToken, authorizeRole(["STUDENT2","ADMIN","TEACH
 
 app.get('/teacher', authenticateToken, authorizeRole(["TEACHER","ADMIN"]), async (req, res) => {
     try {
-        const user = await getUserFromToken(req);
         res.render('teacher.ejs')
     } catch (error) {
         console.error(error)
@@ -109,7 +108,7 @@ if (req.body.password === '' || req.body.username === '') {
     return;
   }
 
-  //else
+  //If filled up, inserted into db.
   try {
     createUsers(req.body.userId, req.body.name, req.body.role, req.body.password)
     res.status(200).redirect('/identify')
@@ -119,7 +118,21 @@ if (req.body.password === '' || req.body.username === '') {
   }
 })
 
-
+//Only the user with the exact userId is allowed to enter, not even people with the same roles are allowed.
+app.get('/users/:userId', authenticateToken, async (req, res) => {
+    try {
+      const user = await getUserFromToken(req);
+      if (req.params.userId === user.username) {
+        res.render('users.ejs', { user: user });
+      } else {
+        throw new Error('You are not authorized to view this user');
+      }
+    } catch (error) {
+      console.error(error)
+      res.status(500).redirect('/identify');
+    }
+  })
+  
 
 function authenticateToken(req, res, next) {
     try {
@@ -151,7 +164,6 @@ function authenticateToken(req, res, next) {
       }
     }
   }
-  
   
   async function getUserFromToken(req) {
     try {
