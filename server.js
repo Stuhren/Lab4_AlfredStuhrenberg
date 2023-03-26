@@ -132,7 +132,7 @@ app.get('/users/:userId', authenticateToken, async (req, res) => {
       res.status(500).redirect('/identify');
     }
   })
-  
+
 
 function authenticateToken(req, res, next) {
     try {

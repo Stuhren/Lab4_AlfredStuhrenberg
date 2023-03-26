@@ -1,2 +1,10 @@
 # Lab4_AlfredStuhrenberg
 Lab 4 made by Alfred Stührenberg
+
+Welcome to my implementation of Lab 4! 
+
+In order to get started I would need you to first run "npm install" in the terminal in order to download all the dependencies that this program has as well as downloading the extension Live Server. Once you have done that you start the program by typing "node server.js" in the terminal and click on the "Go Live" button from the Live Server extension. Once you have done that a window should pop up on the URL localhost:8000/identify and that's how you know that it is working.
+
+If you don't already have a profile there are several ones that you can use with different roles. "id1, id2, id3" with the passwords "password, password2, password3" as well as admin with the password admin. You also have the option to register an account right below the log in. If you want, you can register an account yourself that gets added to the database with an encrypted password for security reasons. In my version however, I decided to keep a clean database and I am therefore initializing the database each time the server starts up which means that I drop the current table and create a new one each time the server starts with the defualt users being added. After you have logged in you will be redirected to the private page for that specific id. No other id is able to enter the private home page of another id, not even admin. You can try by changing the url to one of the other IDs of the other accounts on /users/:userId. Other than that the admin has access to all the other role home pages. Student1 can only access student1, student2 can only access student2, teacher can access both of them as well as the page teacher and admin can access all of them including admins own role home page called admin which contains all the information about the other users. If someone tries to access a page that they are not authorized for they will be redirected to identify to log in to the correct account with the proper authority. 
+
+I hope you enjoy my program!
